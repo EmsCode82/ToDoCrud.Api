@@ -15,6 +15,14 @@ builder.Services.AddDbContext<TodoDbContext>(options =>
 
 var app = builder.Build();
 
+// Ensure database is up-to-date and seeded on startup
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<TodoDbContext>();
+    await db.Database.MigrateAsync();
+    await DbSeeder.SeedAsync(db);
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
