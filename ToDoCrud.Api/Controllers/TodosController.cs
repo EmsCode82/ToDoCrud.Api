@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using ToDoCrud.Api.Data;
+using ToDoCrud.Api.Models;
 
 namespace ToDoCrud.Api.Controllers
 {
@@ -8,50 +12,74 @@ namespace ToDoCrud.Api.Controllers
     [Route("api/[controller]")]
     public class TodosController : ControllerBase
     {
-        // In-memory store for now (will swap to EF Core later)
-        private static readonly List<TodoDto> _items = new()
-        {
-            new TodoDto { Id = 1, Title = "First task", IsDone = false }
-        };
+        private readonly TodoDbContext _db;
+        public TodosController(TodoDbContext db) => _db = db;
 
+        // GET: /api/todos
         [HttpGet]
-        public ActionResult<IEnumerable<TodoDto>> Get() => Ok(_items);
-
-        [HttpGet("{id:int}")]
-        public ActionResult<TodoDto> GetById(int id)
-            => _items.FirstOrDefault(t => t.Id == id) is { } item ? Ok(item) : NotFound();
-
-        [HttpPost]
-        public ActionResult<TodoDto> Create([FromBody] TodoCreateDto dto)
+        public async Task<ActionResult<IEnumerable<TodoDto>>> Get()
         {
-            if (string.IsNullOrWhiteSpace(dto.Title)) return BadRequest("Title is required.");
-            var id = _items.Count == 0 ? 1 : _items.Max(t => t.Id) + 1;
-            var item = new TodoDto { Id = id, Title = dto.Title, IsDone = false };
-            _items.Add(item);
-            return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+            var items = await _db.Todos
+                .AsNoTracking()
+                .Select(t => new TodoDto { Id = t.Id, Title = t.Title, IsDone = t.IsDone })
+                .ToListAsync();
+
+            return Ok(items);
         }
 
-        [HttpPut("{id:int}")]
-        public IActionResult Update(int id, [FromBody] TodoUpdateDto dto)
+        // GET: /api/todos/5
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<TodoDto>> GetById(int id)
         {
-            var item = _items.FirstOrDefault(t => t.Id == id);
-            if (item is null) return NotFound();
-            item.Title = dto.Title;
-            item.IsDone = dto.IsDone;
+            var t = await _db.Todos.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            if (t is null) return NotFound();
+
+            return Ok(new TodoDto { Id = t.Id, Title = t.Title, IsDone = t.IsDone });
+        }
+
+        // POST: /api/todos
+        [HttpPost]
+        public async Task<ActionResult<TodoDto>> Create([FromBody] TodoCreateDto dto)
+        {
+            if (dto is null || string.IsNullOrWhiteSpace(dto.Title))
+                return BadRequest("Title is required.");
+
+            var entity = new TodoItem { Title = dto.Title, IsDone = false };
+            await _db.Todos.AddAsync(entity);
+            await _db.SaveChangesAsync();
+
+            var result = new TodoDto { Id = entity.Id, Title = entity.Title, IsDone = entity.IsDone };
+            return CreatedAtAction(nameof(GetById), new { id = entity.Id }, result);
+        }
+
+        // PUT: /api/todos/5
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Update(int id, [FromBody] TodoUpdateDto dto)
+        {
+            var entity = await _db.Todos.FirstOrDefaultAsync(x => x.Id == id);
+            if (entity is null) return NotFound();
+
+            entity.Title = dto.Title;
+            entity.IsDone = dto.IsDone;
+            await _db.SaveChangesAsync();
+
             return NoContent();
         }
 
+        // DELETE: /api/todos/5
         [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var item = _items.FirstOrDefault(t => t.Id == id);
-            if (item is null) return NotFound();
-            _items.Remove(item);
+            var entity = await _db.Todos.FirstOrDefaultAsync(x => x.Id == id);
+            if (entity is null) return NotFound();
+
+            _db.Todos.Remove(entity);
+            await _db.SaveChangesAsync();
             return NoContent();
         }
     }
 
-    // DTOs (keep in this file for now)
+    // DTOs (kept local for now)
     public record TodoDto
     {
         public int Id { get; set; }
