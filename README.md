@@ -79,6 +79,6 @@ ToDoCrud.Api.sln – solution file
 
 MIT License
 
-Maintained by Eric Shepard
+Maintained by ES
 GitHub: https://github.com/EmsCode82
 Repo: https://github.com/EmsCode82/ToDoCrud.Api
