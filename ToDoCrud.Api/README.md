@@ -1,7 +1,7 @@
 ﻿ToDoCrud.Api
 
-ASP.NET Core 8 Web API for Todo items using EF Core + SQL Server LocalDB.
-On startup the app runs migrations and seeds a few sample rows so GET /api/todos returns data immediately.
+	ASP.NET Core 8 Web API for Todo items using EF Core + SQL Server LocalDB.
+	On startup the app runs migrations and seeds a few sample rows so GET /api/todos returns data immediately.
 
 Quick start
 
