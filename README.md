@@ -15,7 +15,6 @@ Auto-migrate on startup + seed sample data
 
 Swagger UI for interactive testing
 
-<h></h>
 
 🛠 Tech Stack
 
@@ -25,7 +24,6 @@ Entity Framework Core (SqlServer, Design, Tools)
 
 Swagger (Swashbuckle)
 
-<h></h>
 
 📦 Endpoints
 
@@ -35,7 +33,6 @@ POST /api/todos { "title": "Buy milk" }
 PUT /api/todos/{id} { "title": "Buy milk", "isDone": true }
 DELETE /api/todos/{id}
 
-<h></h>
 
 💻 Run Locally
 
@@ -43,7 +40,6 @@ Option A (Visual Studio 2022): open the solution and press F5.
 Option B (CLI): dotnet run --project ToDoCrud.Api
 Swagger: https://localhost<port>/swagger
 
-<h></h>
 
 ⚙️ Configuration
 
@@ -53,7 +49,6 @@ Database: TodoCrudDb
 
 To inspect the DB in SSMS: connect to (localdb)\MSSQLLocalDB → Databases → TodoCrudDb.
 
-<h></h>
 
 🧩 EF Core Migrations
 
@@ -61,7 +56,6 @@ Add-Migration <Name> → create a schema change
 Update-Database → apply migrations to the database
 Remove-Migration → undo the last migration (if not applied)
 
-<h></h>
 
 📂 Repo Structure
 
@@ -73,7 +67,6 @@ Remove-Migration → undo the last migration (if not applied)
 README.md – this file
 ToDoCrud.Api.sln – solution file
 
-<h></h>
 
 📜 License
 
