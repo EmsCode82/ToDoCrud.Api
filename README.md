@@ -23,6 +23,7 @@ SQL
 
 Swagger
 
+
 📦 Endpoints
 
 GET /api/todos
@@ -35,11 +36,13 @@ PUT /api/todos/{id} { "title": "Buy milk", "isDone": true }
 
 DELETE /api/todos/{id}
 
+
 💻 Run Locally
 
 Visual Studio 2022: open solution → F5
 CLI: dotnet run --project ToDoCrud.Api
 Swagger: https://localhost:<port>/swagger
+
 
 ⚙️ Configuration
 
@@ -48,11 +51,13 @@ Server: (localdb)\MSSQLLocalDB · Database: TodoCrudDb
 
 View in SSMS: connect to (localdb)\MSSQLLocalDB → Databases → TodoCrudDb
 
+
 🧩 EF Core Migrations
 
 Add-Migration <Name> – create schema change
 Update-Database – apply migrations
 Remove-Migration – undo last (if not applied)
+
 
 📂 Repo Structure
 
@@ -70,10 +75,12 @@ README.md – this file
 
 ToDoCrud.Api.sln – solution
 
+
 🔗 Links
 
 GitHub Code: https://github.com/EmsCode82/ToDoCrud.Api
 Case Study: https://emscode82.github.io/todo-crud.html
+
 
 📜 License
 
